@@ -96,6 +96,8 @@ cfg["experiment"]["write_interval"] = args.log_interval
 if args.eval:
     cfg["experiment"]["checkpoint_interval"] = 0
     cfg["update_every"] = args.update_every
+    cfg["state_preprocessor"] = RunningStandardScaler
+    cfg["state_preprocessor_kwargs"] = {"size": env.observation_space, "device": device}
 else:
     cfg["experiment"]["checkpoint_interval"] = args.checkpoint_interval
     cfg["gradient_steps"] = args.update_iters
@@ -133,7 +135,7 @@ agent_ddpg = DDPG(models=models,
                   action_space=env.action_space,
                   device=device)
 if args.eval:
-    agent_ddpg.load("./runs/23-01-20_15-11-24-358365_DDPG/checkpoints/best_agent.pt")
+    agent_ddpg.load("./runs/FetchSlide_DDPGHER_success/checkpoints/best_agent.pt")
     cfg_trainer = {"timesteps": 15000, "headless": (not args.render)}
 else:
     # Configure and instantiate the RL trainer
